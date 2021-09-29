@@ -33,7 +33,7 @@ func LongerProcess(instr []string) []string {
 }
 
 // example of a pipeline pattern
-func LongProcessPipeline(inchan <-chan string) chan string {
+func LongProcessPipeline(inchan <-chan string) <-chan string {
 	outchan := make(chan string, 100)
 
 	go func() {
@@ -49,7 +49,7 @@ func LongProcessPipeline(inchan <-chan string) chan string {
 	return outchan
 }
 
-func LongerProcessPipeline(inchan <-chan string) chan string {
+func LongerProcessPipeline(inchan <-chan string) <-chan string {
 	outchan := make(chan string, 100)
 
 	go func() {

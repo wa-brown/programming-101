@@ -19,7 +19,9 @@ func main() {
 	//programming.MethodExample(warren)
 
 	// longProcess()
-	pipelineExample()
+	// pipelineExample()
+	// fanOutAndIn()
+	poolParty()
 }
 
 func longProcess() {
@@ -56,4 +58,53 @@ func pipelineExample() {
 	}
 
 	log.Printf("Time taken: %v", time.Since(startTime))
+}
+
+func fanOutAndIn() {
+	startTime := time.Now()
+
+	inchan := make(chan string, 100)
+	go func() {
+		defer close(inchan)
+		for i := 0; i < 5; i++ {
+			inchan <- fmt.Sprintf("%v", i)
+		}
+	}()
+
+	longChan1 := concurrency.LongProcessPipeline(inchan)
+	longChan2 := concurrency.LongProcessPipeline(inchan)
+
+	fanInChan1 := concurrency.MergeChannels(longChan1, longChan2)
+
+	longerChan1 := concurrency.LongerProcessPipeline(fanInChan1)
+	longerChan2 := concurrency.LongerProcessPipeline(fanInChan1)
+
+	finalChan := concurrency.MergeChannels(longerChan1, longerChan2)
+
+	// process the longerChan
+	for str := range finalChan {
+		log.Println(str)
+	}
+
+	log.Printf("Time taken: %v", time.Since(startTime))
+}
+
+func poolParty() {
+	const jobNum = 5
+	const workerNum = 20
+	jobchan := make(chan string, jobNum)
+	resultschan := make(chan string, jobNum)
+
+	for id := 0; id < workerNum; id++ {
+		go concurrency.Worker(id, jobchan, resultschan)
+	}
+
+	for i := 0; i < jobNum; i++ {
+		jobchan <- fmt.Sprintf("i'm job: %v", i)
+	}
+	close(jobchan)
+
+	for i := 0; i < jobNum; i++ {
+		fmt.Println(<-resultschan)
+	}
 }
