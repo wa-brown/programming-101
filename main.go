@@ -18,10 +18,27 @@ func main() {
 	//warren := programming.StructExample()
 	//programming.MethodExample(warren)
 
+	// golang concurrency patterns
+
+	// anonymous go func example
+	go func() {
+		fmt.Print("hello world")
+	}()
+
+	// wait group example
+	// var wg sync.WaitGroup
+	// wg.Add(1)
+	// go func() {
+	// 	fmt.Print("hello world")
+	// 	wg.Done()
+	// }()
+
+	// concurrency patterns
+
 	// longProcess()
 	// pipelineExample()
 	// fanOutAndIn()
-	poolParty()
+	// poolParty()
 }
 
 func longProcess() {
