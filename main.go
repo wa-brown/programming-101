@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"sync"
 	"time"
 
 	"github.com/wa-brown/programming-101/concurrency"
@@ -21,17 +22,19 @@ func main() {
 	// golang concurrency patterns
 
 	// anonymous go func example
-	go func() {
-		fmt.Print("hello world")
-	}()
-
-	// wait group example
-	// var wg sync.WaitGroup
-	// wg.Add(1)
 	// go func() {
 	// 	fmt.Print("hello world")
-	// 	wg.Done()
 	// }()
+
+	// wait group example
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		fmt.Print("hello world")
+		wg.Done()
+	}()
+
+	wg.Wait() // Don't forget to add this otherwise it will not run the go func
 
 	// concurrency patterns
 
