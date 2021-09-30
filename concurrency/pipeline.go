@@ -32,6 +32,21 @@ func LongerProcess(instr []string) []string {
 	return outstr
 }
 
+// This is a template for all pipeline functions.
+// func pipeline(in <-chan interface{}) <-chan interface{} {
+// 	out := make(chan interface{}, 100)
+
+// 	go func() {
+// 		defer close(out)
+// 		for val := range in {
+// 			// Process the val and then add to the out channel
+// 			out <- val
+// 		}
+// 	}()
+
+// 	return out
+// }
+
 // example of a pipeline pattern
 func LongProcessPipeline(inchan <-chan string) <-chan string {
 	outchan := make(chan string, 100)
